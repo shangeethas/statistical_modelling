@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import scipy.stats as stat
+from matplotlib.pyplot import figure
 
 list_files = ['SPECT.train', 'SPECT.test']
 for file in list_files:
@@ -19,25 +20,35 @@ df = pd.read_csv('SPECT.train', names=headers1)
 print(df.shape)
 print(list(df))
 
-plt.hist(df['overall_diagnosis'], bins=50, density=True)
-plt.xlabel('Probability')
-plt.ylabel('No of bins')
-plt.title('Histogram of Training Data Set')
-#plt.axvline(x=df['overall_diagnosis'].mean(), color='red')
-print(df['overall_diagnosis'].mean())
-plt.savefig('actual_out_poisson.png', dpi=128)
+names = ['positive', 'negative']
+values = df['overall_diagnosis'].value_counts(normalize=True)
+test_df = pd.read_csv('SPECT.test', names=headers1)
+test_values = test_df['overall_diagnosis'].value_counts(normalize=True)
+
+plt.figure(5, figsize=(10,10), dpi= 20, facecolor='w', edgecolor='k')
+plt.subplot(111)
+plt.bar(names, values)
+plt.suptitle('Figure 1 : Model')
+plt.savefig('model_poisson.png', dpi=128)
 plt.close()
 
-test_df	= pd.read_csv('SPECT.test', names=headers1)
-print(test_df.shape)
-plt.hist(test_df['overall_diagnosis'], bins=50, density=True)
-plt.xlabel('Probability')
-plt.ylabel('No of bins')
-plt.title('Histogram of Test Data Set')
-#plt.axvline(x=df['overall_diagnosis'].mean(), color='red')
-print(test_df['overall_diagnosis'].mean())
-print(stat.chisquare(test_df))
-plt.savefig('expected_out_poisson.png', dpi=128)
+plt.figure(5, figsize=(10,10), dpi=20, facecolor='w', edgecolor='g')
+plt.subplot(111)
+plt.bar(names, test_values)
+plt.suptitle('Figure 2 : Evaluation')
+plt.savefig('evaluation_poisson.png', dpi=128)
 plt.close()
 
-#chi_square=(expected-actual)2/expected
+chi2_stat, p_val, dof, ex = stat.chi2_contingency(test_values)
+
+print("===Chi2 Stat===")
+print(chi2_stat)
+print("\n")
+print("===Degrees of Freedom===")
+print(dof)
+print("\n")
+print("===P-Value===")
+print(p_val)
+print("\n")
+print("===Contingency Table===")
+print(ex)
