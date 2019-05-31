@@ -11,31 +11,23 @@ for iteration in range(100):
 	mean = df_subsample['Price'].mean()
 	sample_mean.append(mean)
 
-plt.hist(df['Price'], bins=200, density=True, histtype='step')
+
 plt.hist(sample_mean, bins=10, density=True, histtype='step')
-plt.axvline(x=np.mean(sample_mean))
-plt.axvline(x=df['Price'].mean(), color="red")
-plt.ylabel('Probability')
+population_mean = df['Price'].mean()
+population_variance = df['Price'].std()
+print('Population mean:', population_mean)
+print('Population variance:', population_variance)
+
+mean_sample_mean = np.mean(sample_mean)
+mean_sample_variance = np.std(sample_mean)
+print(mean_sample_variance)
+
+difference_mean = df['Price'].mean() - np.mean(sample_mean)
+print(difference_mean)
+
+plt.title('Histogram of Sample Mean Price')
 plt.savefig('out.png', dpi=128)
 plt.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
-
 
 
 
